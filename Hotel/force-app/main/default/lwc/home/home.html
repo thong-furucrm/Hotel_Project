@@ -1,0 +1,48 @@
+<template>
+  <div class="slds-grid slds-gutters">
+    <div class="slds-col">
+      <div class="slds-m-around_medium">
+          <select style="padding: 7px; border-radius: 5px;" onchange={handleProvinceChange}>
+              <template for:each={provinces} for:item="province">
+                  <option key={province.code} value={province.code}>{province.name}</option>
+              </template>
+          </select>
+      </div>
+    </div>
+    <div class="slds-col">
+            <div class="slds-form-element">
+                <input placeholder="Start" type="date" id="startDate" style="padding: 7px; border-radius: 5px;" value={defaultStartDate} oninput={handleStartDateChange} min={minStartDate}></input>
+            </div>
+        </div>
+    <div class="slds-col">
+      <div class="slds-form-element">
+        <input placeholder="End" type="date" id="endDate" value={defaultEndDate} style="padding: 7px; border-radius: 5px;" oninput={handleEndDateChange} min={minStartDate}></input>
+    </div>
+    </div>
+    <div class="slds-col">
+      <div class="slds-m-around_medium">
+        <select style="padding: 7px; border-radius: 5px;" onchange={handleProvinceChange}>
+            
+                <option value="">Số Người 1, Số Phòng 1</option>
+                <option value="">Số Người 2, Số Phòng 2</option>
+            
+        </select>
+    </div>
+    </div>
+    <div class="slds-col">
+      <lightning-icon icon-name="utility:search" alternative-text="Approved" title="Approved"></lightning-icon>
+    </div>
+  </div>
+
+  <!-- breadcrumbs -->
+  <nav role="navigation" aria-label="Breadcrumbs">
+    <ol class="slds-breadcrumb slds-list_horizontal slds-wrap">
+    <li class="slds-breadcrumb__item">
+    <a href="#">Đà Lạt</a>
+    </li>
+    <li class="slds-breadcrumb__item">
+    <a href="#">Search result</a>
+    </li>
+    </ol>
+    </nav>
+</template>
