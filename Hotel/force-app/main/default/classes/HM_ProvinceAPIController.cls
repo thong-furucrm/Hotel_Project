@@ -1,5 +1,4 @@
-public with sharing class ProvinceAPIController {
-
+public with sharing class HM_ProvinceAPIController {
     private static final String API_BASE_URL = 'https://provinces.open-api.vn/api/p/';
 
     @AuraEnabled
@@ -25,7 +24,3 @@ public with sharing class ProvinceAPIController {
         }
     }
 }
-
-// Controller: HM_Home
-
-// LWC: hm_Home

@@ -1,0 +1,120 @@
+<template >
+  <lightning-card>
+    <div class="slds-grid slds-gutters">
+      <div class="slds-col">
+        <div class="slds-m-around_medium">
+          <select style="padding: 7px; border-radius: 5px;" onchange={handleProvinceChange}>
+            <template for:each={provinces} for:item="province">
+              <option key={province.code} value={province.code}>{province.name}</option>
+            </template>
+          </select>
+        </div>
+      </div>
+      <div class="slds-col">
+        <div class="slds-form-element">
+          <input placeholder="Start" type="date" id="startDate" style="padding: 7px; border-radius: 5px;"
+            value={startDate} oninput={handleStartDateChange} min={minStartDate}></input>
+        </div>
+      </div>
+      <div class="slds-col">
+        <div class="slds-form-element">
+          <input placeholder="End" type="date" id="endDate" value={endDate} style="padding: 7px; border-radius: 5px;"
+            oninput={handleEndDateChange} min={minStartDate}></input>
+        </div>
+      </div>
+      <div class="slds-col">
+        <div class="slds-m-around_medium">
+          <select style="padding: 7px; border-radius: 5px;" onchange={handleCapacityChange}>
+            <option value="">Số Người 1, Số Phòng 1</option>
+            <option value="">Số Người 2, Số Phòng 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="slds-col">
+        <lightning-icon icon-name="utility:search" alternative-text="Approved" title="Approved"></lightning-icon>
+      </div>
+    </div>
+
+    <!-- breadcrumbs -->
+    <nav role="navigation" aria-label="Breadcrumbs">
+      <ol class="slds-breadcrumb slds-list_horizontal slds-wrap">
+        <li class="slds-breadcrumb__item">
+          <a href="#">Đà Lạt</a>
+        </li>
+        <li class="slds-breadcrumb__item">
+          <a href="#">Search result</a>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- content -->
+    <div class="slds-grid slds-gutters">
+      <div class="slds-col slds-size_1-of-3" style="border: 1px solid; height: 50vh">
+        <h5>Filter</h5>
+        <div class="slds-form-element__control">
+          <template for:each={picklistConvenient} for:item="convenient">
+            <div key={convenient}>
+              <input type="checkbox" name="options" id={convenient} value={convenient} />
+              <label class="slds-checkbox__label" for={convenient}>
+                <span class="slds-checkbox_faux"></span>
+                <span style="padding-left: 7px;" class="slds-form-element__label">{convenient}</span>
+              </label>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="slds-col slds-size_2-of-3">
+        <h3>Result 300 hotel</h3>
+        <select style="padding: 7px; border-radius: 5px;" onchange={handleArrangedChange}>
+          <option value="" selected>Sắp xếp theo</option>
+          <option value="">Price(Lowest first)</option>
+          <option value="">Số Người 2, Số Phòng 2</option>
+        </select>
+
+        <!-- center content -->
+        <template for:each={hotelsWithCheapestRooms} for:item="hotelAndRoom">
+          <div key={hotelAndRoom.Id} class="slds-grid slds-gutters"
+            style="border: 2px solid; padding: 10px; border-radius: 5px;">
+            <div class="slds-col slds-size_1-of-3">
+              <img src={hotelAndRoom.Image_Hotel__r} alt="image-hotel">
+            </div>
+            <div class="slds-col slds-size_2-of-3">
+              <h2>
+                <span style="color: cyan; font-size: 20px; padding-right: 40px">{hotelAndRoom.Name}</span>
+                <template for:each={hotelAndRoom.Star__c} for:item="star">
+                  <lightning-icon key={star} icon-name="utility:favorite" size="x-small" variant="warning"
+                    alternative-text="favorite" title="favorite"></lightning-icon>
+                </template>
+              </h2>
+              <p>{hotelAndRoom.Address__c}</p>
+              <div style="border: 2px solid; border-radius: 5px; padding: 5px; margin-top: 10px">
+                <div class="slds-grid slds-gutters">
+                  <div class="slds-col">
+                    <h3 style="font-weight: bold; padding-bottom: 2px;">{hotelAndRoom.Room__r.Room_Name__c}</h3>
+                    <template for:each={hotelAndRoom.Convenient__c} for:item="convenient">
+                      <div key={convenient} class="slds-form-element__control">
+                        <div style="padding-bottom: 2px;">
+                          <input type="checkbox" name="options" id={convenient} value={convenient} checked />
+                          <label class="slds-checkbox__label" for={convenient}>
+                            <span class="slds-checkbox_faux"></span>
+                            <span style="padding-left: 7px;" class="slds-form-element__label">{convenient}</span>
+                          </label>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                  <div class="slds-col">
+                    <p>1 đêm, 1 người lớn</p>
+                    <p style="font-size: 23px;">VND {hotelAndRoom.Room__r.Price__c}</p>
+                    <button style="padding: 3px 23px;" class="slds-button slds-button_outline-brand">Xem chi
+                      tiết</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </lightning-card>
+</template>
