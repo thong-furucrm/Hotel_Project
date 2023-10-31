@@ -14,6 +14,16 @@ export default class Home extends LightningElement {
   @track selectedCapacity
   @track selectedArranged;
   @track hotelsWithCheapestRooms;
+  @track isShow
+  @track isModalRoomDetails = false
+
+  handleShowModalRoomDetails = () => {
+    this.isModalRoomDetails = true
+  }
+
+  handleCloseModalRoomDetails = () => {
+    this.isModalRoomDetails = false
+  }
 
   connectedCallback() {
     this.handleGetAllProvince();
@@ -25,6 +35,7 @@ export default class Home extends LightningElement {
 
   handleGetHotelAndRoom = () => {
     getHotelsWithCheapestRooms().then((result) => {
+      console.log('item: ' + result);
       const modifiedResult = result.map(item => {
         item.Star__c = Array.from({ length: item.Star__c }, (_, i) => i + 1);
         if (item.Image_Hotel__r || item.Room__r) {
@@ -35,6 +46,7 @@ export default class Home extends LightningElement {
         return item;
       });
       this.hotelsWithCheapestRooms = modifiedResult;
+      // console.log(this.hotelsWithCheapestRooms);
     }).catch((err) => {
       console.error('Lỗi khi get hotel and room:', err.mesage);
     })
@@ -94,14 +106,14 @@ export default class Home extends LightningElement {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const formattedDate = new Date().toLocaleDateString('en-GB', options);
     this.startDate = formattedDate;
-    // console.log('start: '+this.startDate);
+    console.log('start: ' + this.startDate);
   }
 
   defaultEndDate = () => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const formattedDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', options);
     this.endDate = formattedDate
-    //  console.log('end: '+ this.endDate);
+    console.log('end: ' + this.endDate);
   }
 
   handleStartDateChange(event) {
@@ -110,5 +122,45 @@ export default class Home extends LightningElement {
 
   handleEndDateChange(event) {
     this.selectedEndDate = event.target.value;
+  }
+
+  @track listRoom
+  // details page
+  handleDetailsPage = (event) => {
+    this.isShow = true;
+    console.log(event.target.dataset.value);
+
+    getHotelsWithCheapestRooms().then((result) => {
+      const modifiedResult = result.map(item => {
+        item.Star__c = Array.from({ length: item.Star__c }, (_, i) => i + 1);
+        item.Image_Hotel__r = item.Image_Hotel__r.map(record => record.Image_Url__c);
+        item.Convenient__c = item.Room__r[0].Convenient__c.split(';');
+        return item;
+      });
+      const rooms = modifiedResult[0].Room__r.map((room) => {
+        room.discountPrice = room.Price__c - (room.Price__c * room.Discount__c / 100)
+        return room
+      })
+      console.log(rooms);
+      this.listRoom = modifiedResult[0].Room__r;
+      // console.log(this.hotelsWithCheapestRooms);
+    }).catch((err) => {
+      console.error('Lỗi khi get hotel and room:', err.mesage);
+    })
+  }
+
+  // table
+  value = 'inProgress';
+
+  get options() {
+    return [
+      { label: 'New', value: 'new' },
+      { label: 'In Progress', value: 'inProgress' },
+      { label: 'Finished', value: 'finished' },
+    ];
+  }
+
+  handleChange(event) {
+    this.value = event.detail.value;
   }
 }

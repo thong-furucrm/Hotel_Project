@@ -24,9 +24,14 @@ public with sharing class HM_RoomController {
         // List<HotelWrapper> hotelsWithCheapestRooms = new List<HotelWrapper>();
         
         // Truy vấn tất cả hotel
-        List<Hotel__c> hotels = [SELECT Id, Name, Star__c, Address__c, 
-                                (SELECT Id, Room_Name__c, Price__c, Discount__c, Convenient__c FROM Room__r ORDER BY Price__c ASC LIMIT 1) cheapestRoom, 
+        // List<Hotel__c> hotels = [SELECT Id, Name, Star__c, Address__c, 
+        //                         (SELECT Id, Room_Name__c, Price__c, Discount__c, Convenient__c FROM Room__r ORDER BY Price__c ASC LIMIT 1) cheapestRoom, 
+        //                         (SELECT Image_Url__c from Image_Hotel__r) hotelImages from Hotel__c WHERE ID='a0U2t000004eystEAA'];
+
+        List<Hotel__c> hotels = [SELECT Id, Name, Star__c, Address__c, Description__c,
+                                (SELECT Id, Room_Name__c, Price__c, Discount__c, Convenient__c, Room_Type__c, Room_Capacity__c, Total_Room__c FROM Room__r ORDER BY Price__c) cheapestRoom, 
                                 (SELECT Image_Url__c from Image_Hotel__r) hotelImages from Hotel__c WHERE ID='a0U2t000004eystEAA'];
+
         System.debug(hotels);
         
         
