@@ -4,15 +4,16 @@
   "version": "1.0.0",
   "description": "Salesforce App",
   "scripts": {
+    "prettier": "prettier",
     "lint": "eslint **/{aura,lwc}/**",
     "test": "npm run test:unit",
     "test:unit": "sfdx-lwc-jest",
     "test:unit:watch": "sfdx-lwc-jest --watch",
     "test:unit:debug": "sfdx-lwc-jest --debug",
     "test:unit:coverage": "sfdx-lwc-jest --coverage",
-    "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prettier:verify": "prettier --list-different \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "postinstall": "husky install",
+    "jj": "prettier --plugin=prettier-plugin-apex --write \"force-app\\**\\*.{trigger,cls}\"",
     "precommit": "lint-staged"
   },
   "devDependencies": {
@@ -27,8 +28,9 @@
     "eslint-plugin-jest": "^26.1.2",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.7",
-    "prettier": "^2.6.0",
-    "prettier-plugin-apex": "^1.10.0"
+    "prettier": "^2.8.8",
+    "prettier-plugin-apex": "^1.13.0",
+    "prettier-plugin-organize-imports": "3.2.3"
   },
   "lint-staged": {
     "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [

@@ -125,28 +125,180 @@ const result = [
 // // In ra 2 phần tử đã chọn
 // console.log(selectedConveniences);
 
-const modifiedResult = result.map(item => {
-  item.Star__c = Array.from({ length: item.Star__c }, (_, i) => i + 1);
-  item.Image_Hotel__r = item.Image_Hotel__r.map(record => record.Image_Url__c);
-  item.Convenient__c = item.Room__r[0].Convenient__c.split(';');
-  // Chuyển Room__r thành mảng chứa các đối tượng
-  item.Room__r = item.Room__r.map(room => ({
-    Room_Id__c: room.Id,
-    Room_Name__c: room.Room_Name__c,
-    Price__c: room.Price__c,
-    Discount__c: room.Discount__c,
-    // Convenient__c: room.Convenient__c.split(';'),
-    Room_Type__c: room.Room_Type__c
-  }));
+// const modifiedResult = result.map(item => {
+//   item.Star__c = Array.from({ length: item.Star__c }, (_, i) => i + 1);
+//   item.Image_Hotel__r = item.Image_Hotel__r.map(record => record.Image_Url__c);
+//   item.Convenient__c = item.Room__r[0].Convenient__c.split(';');
+//   // Chuyển Room__r thành mảng chứa các đối tượng
+//   item.Room__r = item.Room__r.map(room => ({
+//     Room_Id__c: room.Id,
+//     Room_Name__c: room.Room_Name__c,
+//     Price__c: room.Price__c,
+//     Discount__c: room.Discount__c,
+//     // Convenient__c: room.Convenient__c.split(';'),
+//     Room_Type__c: room.Room_Type__c
+//   }));
 
-  
-  return item;
-});
+
+//   return item;
+// });
 
 // In ra kết quả
-console.log(JSON.stringify(modifiedResult.Room__r, null, 2));
+// console.log(JSON.stringify(modifiedResult.Room__r, null, 2));
 
 
 
-// console.log(modifiedResult);
-console.log(modifiedResult[0].Room__r);
+// // console.log(modifiedResult);
+// console.log(modifiedResult[0].Room__r);
+
+// function tinhSoDem(startDate, endDate) {
+//   // Chuyển chuỗi ngày thành đối tượng Date
+//   const startDateObj = new Date(startDate);
+//   const endDateObj = new Date(endDate);
+
+//   // Tính hiệu giữa hai ngày (đơn vị là mili giây)
+//   const timeDifference = endDateObj - startDateObj;
+
+//   // Chuyển mili giây thành số ngày (1 ngày = 86400 giây)
+//   const numberOfNights = timeDifference / (1000 * 60 * 60 * 24);
+
+//   return numberOfNights;
+// }
+
+// const startDate = "2023-11-17";
+// const endDate = "2023-11-20";
+
+// const numberOfNights = tinhSoDem(startDate, endDate);
+// console.log("Số đêm: " + numberOfNights);
+
+// const listPage = []
+// for (let i = 1; i <= 5; i++) {
+//   listPage.push({ page: i, isActive: 'active' })
+// }
+// console.log(listPage);
+
+// function removeDiacritics(inputString) {
+//   return inputString.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/(Tỉnh|Thành phố) /g, '')
+// }
+
+// var inputString1 = "Tỉnh Hà Nội";
+// var inputString2 = "Thành phố Hồ Chí Minh";
+// var inputString3 = "Cái Răng";
+
+// var output1 = removeDiacritics(inputString1);
+// var output2 = removeDiacritics(inputString2);
+// var output3 = removeDiacritics(inputString3);
+
+// console.log(output1); // Kết quả: "tinh ha noi"
+// console.log(output2); // Kết quả: "thanh pho ho chi minh"
+// console.log(output3); // Kết quả: "cai rang"
+
+// function removeProvinceOrCity(inputString) {
+//   // Sử dụng biểu thức chính quy để tìm và loại bỏ "Tỉnh" hoặc "Thành phố" từ chuỗi
+//   var result = inputString.replace(/(Tỉnh|Thành phố) /g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+//   return result
+// }
+
+// var inputString1 = "Tỉnh Hà Nội";
+// var inputString2 = "Thành phố Hồ Chí Minh";
+// var inputString3 = "Cái Răng";
+
+// var output1 = removeProvinceOrCity(inputString1);
+// var output2 = removeProvinceOrCity(inputString2);
+// var output3 = removeProvinceOrCity(inputString3);
+
+// console.log(output1); // Kết quả: "Hà Nội"
+// console.log(output2); // Kết quả: "Hồ Chí Minh"
+// console.log(output3); // Kết quả: "Cái Răng"
+
+// function countFields(jsonObject) {
+//   if (typeof jsonObject === 'object') {
+//       return Object.keys(jsonObject).length;
+//   } else {
+//       return 0; // Không phải đối tượng JSON
+//   }
+// }
+
+// // Một ví dụ về đối tượng JSON
+// const data = {
+//   "startDate": "2023-11-07",
+//   "endDate": "2023-11-20",
+//   "roomId": "a0W2t000008r0lLEAQ",
+//   "totalRoom": "3"
+// };
+
+// const numberOfFields = countFields(data);
+// console.log(`Số lượng trường trong đối tượng JSON là: ${numberOfFields}`);
+
+// Dữ liệu ban đầu
+
+const data = [
+  {
+      "Id": "a0U2t000004eyszEAA",
+      "Name": "Mekong Delta Retreat",
+      "Star__c": [
+          1,
+          2,
+          3
+      ],
+      "Address__c": "456 Duong Van Don - Can Tho",
+      "Description__c": "Nghi duong tai Mekong Delta Retreat tai Can Tho",
+      "Image_Hotel__r": "https://cf.bstatic.com/xdata/images/hotel/max1280x900/497698576.jpg?k=ac83d5020c09206087145bdc972c8b29dff9c12d51b448b58a931880cba1e946&o=&hp=1",
+      "Room__r": {
+          "Hotel_Id__c": "a0U2t000004eyszEAA",
+          "Id": "a0W2t000008r0lLEAQ",
+          "Room_Name__c": "Phòng thaongs mát có cửa sổ",
+          "Price__c": 2000000,
+          "Discount__c": 5,
+          "Convenient__c": "24-hour front desk;Lift;Breakfast;Airport shuttle;Non-smoking rooms",
+          "Room_Type__c": "Deluxe Room",
+          "Room_Capacity__c": 3,
+          "Total_Room__c": 6
+      },
+      "Convenient__c": [
+          "24-hour front desk",
+          "Airport shuttle"
+      ]
+  },
+  {
+      "Id": "a0U2t000004eysyEAA",
+      "Name": "Starlight Beachfront Resort",
+      "Star__c": [
+          1,
+          2,
+          3,
+          4,
+          5
+      ],
+      "Address__c": "123 Duong Vo Nguyen Giap - Đa Nang",
+      "Description__c": "Starlight Beachfront Resort tai Da Nang voi tam nhin hoan hao ve bien va dich vu 5 sao.",
+      "Image_Hotel__r": "https://cf.bstatic.com/xdata/images/hotel/max1280x900/499221774.jpg?k=8d3d4f86cf3efc02d17baabd084ef842c95d405762bfe1a43d539755632b8274&o=&hp=1",
+      "Room__r": {
+          "Hotel_Id__c": "a0U2t000004eysyEAA",
+          "Id": "a0W2t000008r0lkEAA",
+          "Room_Name__c": "Phòng lớn có 2 giường",
+          "Price__c": 699999,
+          "Discount__c": 25,
+          "Convenient__c": "Room service;24-hour front desk;Lift;Breakfast;Airport shuttle;Non-smoking rooms",
+          "Room_Type__c": "Superior Room",
+          "Room_Capacity__c": 4,
+          "Total_Room__c": 4
+      },
+      "Convenient__c": [
+          "Lift",
+          "Non-smoking rooms"
+      ]
+  }
+]
+
+function sortByPrice(data) {
+  // Sử dụng hàm sort để sắp xếp dữ liệu dựa trên trường 'Room__r.Price__c'
+  data.sort((a, b) => {
+    return a.Room__r.Price__c - b.Room__r.Price__c;
+  });
+
+  return data;
+}
+
+console.log(sortByPrice(data));

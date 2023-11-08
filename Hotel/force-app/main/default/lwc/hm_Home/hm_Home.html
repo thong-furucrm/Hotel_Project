@@ -1,248 +1,349 @@
 <template>
-  <lightning-card if:false={isShow}>
-    <div class="slds-grid slds-gutters">
-      <div class="slds-col">
-        <!-- <lightning-combobox
-                  name="progress"
-                  label="Status"
-                  value={value}
-                  placeholder="Select Progress"
-                  options={provinces}
-                  onchange={handleChange} ></lightning-combobox>
-      
-          <p>Selected value is: {value}</p> -->
-        <div class="slds-m-around_medium">
-          <select style="padding: 7px; border-radius: 5px;" onchange={handleProvinceChange}>
-            <template for:each={provinces} for:item="province">
-              <option key={province.code} value={province.code}>{province.name}</option>
-            </template>
-          </select>
+  <!-- Dashboard -->
+  <lightning-card if:true={displayDashboard}>
+    <div style="margin: 25px;">
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+          <lightning-combobox name="progress" variant="label-hidden" value={selectedProvince}
+            placeholder="Select Progress" options={provinces} onchange={handleProvinceChange}></lightning-combobox>
+        </div>
+        <div class="slds-col">
+          <div class="slds-form-element">
+            <lightning-input variant="label-hidden" placeholder="Ngày nhận phòng" type="date" name="input8"
+              value={selectedStartDate} min={minStartDate} onchange={handleStartDateChange}></lightning-input>
+          </div>
+        </div>
+        <div class="slds-col">
+          <div class="slds-form-element">
+            <lightning-input type="date" variant="label-hidden" name="input9" value={selectedEndDate}
+              onchange={handleEndDateChange} min={selectedStartDate} placeholder="Ngày trả phòng "></lightning-input>
+          </div>
+        </div>
+        <div class="slds-col">
+          <!-- <lightning-combobox name="progress" disabled value={selectedCapacity} variant="label-hidden"
+            placeholder="Select Progress" options={capacity} onclick={handleCapacityChange}></lightning-combobox> -->
+          <lightning-button label="Capacity Change" variant="label-hidden" title="Non-primary action"
+            onclick={handleClickCapacity} class="slds-m-left_x-small"></lightning-button>
+        </div>
+        <div class="slds-col">
+          <lightning-icon style="cursor: pointer;" icon-name="utility:search" alternative-text="Approved"
+            title="Approved" onclick={handleSearchHotel}></lightning-icon>
         </div>
       </div>
-      <div class="slds-col">
-        <div class="slds-form-element">
-          <lightning-input type="date" name="input8" value={startDate} min={minStartDate}></lightning-input>
-          <!-- <input placeholder="Start" type="date" id="startDate" style="padding: 7px; border-radius: 5px;"
-            value={startDate} oninput={handleStartDateChange} min={minStartDate}></input> -->
-        </div>
-      </div>
-      <div class="slds-col">
-        <div class="slds-form-element">
-          <!-- <input placeholder="End" type="date" id="endDate" value={endDate} style="padding: 7px; border-radius: 5px;"
-            oninput={handleEndDateChange} min={minStartDate}></input> -->
-          <lightning-input type="date" name="input9" value={endDate} min={startDate}></lightning-input>
-        </div>
-      </div>
-      <div class="slds-col">
-        <div class="slds-m-around_medium">
-          <select style="padding: 7px; border-radius: 5px;" onchange={handleCapacityChange}>
-            <option value="">Số Người 1, Số Phòng 1</option>
-            <option value="">Số Người 2, Số Phòng 2</option>
-          </select>
-        </div>
-      </div>
-      <div class="slds-col">
-        <lightning-icon icon-name="utility:search" alternative-text="Approved" title="Approved"></lightning-icon>
-      </div>
-    </div>
 
-    <!-- breadcrumbs -->
-    <nav role="navigation" aria-label="Breadcrumbs">
-      <ol class="slds-breadcrumb slds-list_horizontal slds-wrap">
-        <li class="slds-breadcrumb__item">
-          <a href="#">Đà Lạt</a>
-        </li>
-        <li class="slds-breadcrumb__item">
-          <a href="#">Search result</a>
-        </li>
-      </ol>
-    </nav>
-
-    <!-- content -->
-    <div class="slds-grid slds-gutters">
-      <div class="slds-col slds-size_1-of-3" style="border: 1px solid; height: 50vh">
-        <h5>Filter</h5>
-        <div class="slds-form-element__control">
-          <template for:each={picklistConvenient} for:item="convenient">
-            <div key={convenient}>
-              <input type="checkbox" name="options" id={convenient} value={convenient} />
-              <label class="slds-checkbox__label" for={convenient}>
-                <span class="slds-checkbox_faux"></span>
-                <span style="padding-left: 7px;" class="slds-form-element__label">{convenient}</span>
-              </label>
-            </div>
-          </template>
+      <!-- breadcrumbs -->
+      <nav role="navigation" aria-label="Breadcrumbs" style="margin-bottom: 10px; margin-top: 10px">
+        <ol if:true={displayBreadcrumb} class="slds-breadcrumb slds-list_horizontal slds-wrap">
+          <li class="slds-breadcrumb__item">
+            <a href="#">{selectedProvince}</a>
+          </li>
+          <li class="slds-breadcrumb__item">
+            <a href="#">Search result</a>
+          </li>
+        </ol>
+      </nav>
+      <!-- content -->
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-3">
+          <div class="slds-box">
+            <h5>Filter</h5>
+            <lightning-checkbox-group name="Checkbox Group" label="" options={picklistConvenient} value=''
+              onchange={handleGetCheckbox}></lightning-checkbox-group>
+          </div>
         </div>
-      </div>
-      <div class="slds-col slds-size_2-of-3">
-        <h3>Result 300 hotel</h3>
-        <select style="padding: 7px; border-radius: 5px;" onchange={handleArrangedChange}>
-          <option value="" selected>Sắp xếp theo</option>
-          <option value="">Price(Lowest first)</option>
-          <option value="">Số Người 2, Số Phòng 2</option>
-        </select>
-
-        <!-- center content -->
-        <template for:each={hotelsWithCheapestRooms} for:item="hotelAndRoom">
-          <div key={hotelAndRoom.Id} class="slds-grid slds-gutters"
-            style="border: 2px solid; padding: 10px; border-radius: 5px;">
-            <div class="slds-col slds-size_1-of-3">
-              <img src={hotelAndRoom.Image_Hotel__r} alt="image-hotel">
-            </div>
-            <div class="slds-col slds-size_2-of-3">
-              <h2>
-                <span style="color: cyan; font-size: 20px; padding-right: 40px">{hotelAndRoom.Name}</span>
-                <template for:each={hotelAndRoom.Star__c} for:item="star">
-                  <lightning-icon key={star} icon-name="utility:favorite" size="x-small" variant="warning"
-                    alternative-text="favorite" title="favorite"></lightning-icon>
-                </template>
-              </h2>
-              <p>{hotelAndRoom.Address__c}</p>
-              <div style="border: 2px solid; border-radius: 5px; padding: 5px; margin-top: 10px">
-                <div class="slds-grid slds-gutters">
-                  <div class="slds-col">
-                    <h3 style="font-weight: bold; padding-bottom: 2px;">{hotelAndRoom.Room__r.Room_Name__c}</h3>
-                    <template for:each={hotelAndRoom.Convenient__c} for:item="convenient">
-                      <div key={convenient} class="slds-form-element__control">
-                        <div style="padding-bottom: 2px;">
-                          <input type="checkbox" name="options" id={convenient} value={convenient} checked />
-                          <label class="slds-checkbox__label" for={convenient}>
-                            <span class="slds-checkbox_faux"></span>
-                            <span style="padding-left: 7px;" class="slds-form-element__label">{convenient}</span>
-                          </label>
+        <div class="slds-col slds-size_2-of-3">
+          <h3 style="font-weight: bold;">Result {totalHotel} hotel</h3>
+          <lightning-combobox name="progress" value={arrangeSelected} variant="label-hidden"
+            placeholder="Hotel mới nhất" options={arrange} onchange={handleArrangedChange}
+            style="margin-bottom: 10px; max-width: 30%"></lightning-combobox>
+          <!-- center content -->
+          <template for:each={hotelsWithCheapestRooms} for:item="hotelAndRoom">
+            <div key={hotelAndRoom.Id} class="slds-grid slds-box slds-gutters" style="margin: 0; margin-bottom: 20px;">
+              <div class="slds-col slds-size_1-of-3">
+                <img style="max-width: 100%; height: auto" src={hotelAndRoom.Image_Hotel__r} alt="image-hotel">
+              </div>
+              <div class="slds-col slds-size_2-of-3">
+                <h2>
+                  <span style="color: cyan; font-size: 20px; padding-right: 40px">{hotelAndRoom.Name}</span>
+                  <template for:each={hotelAndRoom.Star__c} for:item="star">
+                    <lightning-icon key={star} icon-name="utility:favorite" size="x-small" variant="warning"
+                      alternative-text="favorite" title="favorite"></lightning-icon>
+                  </template>
+                </h2>
+                <p>{hotelAndRoom.Address__c}</p>
+                <div style="border: 2px solid; border-radius: 5px; padding: 5px; margin-top: 10px">
+                  <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                      <h3 style="font-weight: bold; padding-bottom: 2px;">{hotelAndRoom.Room__r.Room_Name__c}</h3>
+                      <template for:each={hotelAndRoom.Convenient__c} for:item="convenient">
+                        <div key={convenient} class="slds-form-element__control">
+                          <div style="padding-bottom: 2px;">
+                            <input disabled type="checkbox" name="options" id={convenient} value={convenient} checked />
+                            <label class="slds-checkbox__label" for={convenient}>
+                              <span class="slds-checkbox_faux"></span>
+                              <span style="padding-left: 7px;" class="slds-form-element__label">{convenient}</span>
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    </template>
-                  </div>
-                  <div class="slds-col">
-                    <p>1 đêm, 1 người lớn</p>
-                    <p style="font-size: 23px;">VND {hotelAndRoom.Room__r.Price__c}</p>
-                    <!-- <a class="slds-button slds-button_outline-brand" onclick="handleDetailsPage" href="#">Xem chi tiết</a> -->
-                    <button onclick={handleDetailsPage} style="padding: 3px 23px;"
-                      class="slds-button slds-button_outline-brand" data-value={hotelAndRoom.Id}>Xem chi tiết</button>
+                      </template>
+                    </div>
+                    <div class="slds-col">
+                      <p>1 đêm, 1 người lớn</p>
+                      <p style="font-size: 23px;">VND {hotelAndRoom.Room__r.Price__c}</p>
+                      <button onclick={handleDetailsPage} style="padding: 3px 23px;"
+                        class="slds-button slds-button_outline-brand" data-value={hotelAndRoom.Id}>Xem chi tiết</button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </template>
+        </div>
+      </div>
+      <!-- Pagination -->
+      <div class="pagination" if:true={displayPagination}>
+        <a onclick={handlePreviousPage} href="javascript:void(0)">&laquo;</a>
+        <template for:each={pages} for:item="pageNumber">
+          <a class={pageNumber.isActive} onclick={handleGetHotelByPage} data-value={pageNumber.page}
+            key={pageNumber.page} href="javascript:void(0)">{pageNumber.page}</a>
         </template>
+        <a onclick={handleNextPage} href="javascript:void(0)">&raquo;</a>
       </div>
     </div>
   </lightning-card>
-  <div if:true={isShow}>
-    <div class="slds-grid slds-gutters">
-      <div class="slds-col slds-size_1-of-3">
-        <div>
 
-        </div>
-      </div>
-      <div class="slds-col slds-size_2-of-3">
-        <template for:each={hotelsWithCheapestRooms} for:item="hotelAndRoom">
-          <div key={hotelAndRoom.ID}>
-            <h2>
-              <span style="color: cyan; font-size: 20px; padding-right: 40px">{hotelAndRoom.Name}</span>
-              <template for:each={hotelAndRoom.Star__c} for:item="star">
-                <lightning-icon key={star} icon-name="utility:favorite" size="x-small" variant="warning"
-                  alternative-text="favorite" title="favorite"></lightning-icon>
-              </template>
-            </h2>
-            <p>{hotelAndRoom.Address__c}</p>
-            <template for:each={hotelAndRoom.Convenient__c} for:item="convenient">
-              <lightning-button key={convenient} style="background-color: grey;" label={convenient}
-                title="Primary action" class="slds-m-left_x-small"></lightning-button>
-            </template>
-            <p>{hotelAndRoom.Description__c}</p>
-          </div>
-        </template>
-        <h2>List Room</h2>
-        <!-- nav list -->
-        <div class="slds-grid slds-gutters">
-          <div class="slds-col">
-            <div class="slds-m-around_medium">
-              <select style="padding: 7px; border-radius: 5px;" onchange={handleProvinceChange}>
-                <template for:each={provinces} for:item="province">
-                  <option key={province.code} value={province.code}>{province.name}</option>
+  <!-- Details page -->
+  <div if:true={displayDetailsPage} style="background-color: white; padding: 25px;">
+    <div if:true={hotelDetails}>
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-3">
+          <div>
+            <div class="image-large" style="padding-bottom: 15px;">
+              <img src={defaultImage} alt="">
+            </div>
+            <div class="image-small">
+              <div class="slds-grid" if:true={hotelDetails}>
+                <template for:each={hotelDetails.Image_Hotel__r} for:item="hotel">
+                  <div key={hotel.Id} class="slds-col">
+                    <img onclick={handleChangeImage} data-value={hotel.Image_Url__c} src={hotel.Image_Url__c} alt="">
+                  </div>
                 </template>
-              </select>
-            </div>
-          </div>
-          <div class="slds-col">
-            <div class="slds-form-element">
-              <lightning-input type="date" name="input8" value={startDate} min={minStartDate}></lightning-input>
-            </div>
-          </div>
-          <div class="slds-col">
-            <div class="slds-form-element">
-              <lightning-input type="date" name="input9" value={endDate} min={startDate}></lightning-input>
-            </div>
-          </div>
-          <div class="slds-col">
-            <div class="slds-m-around_medium">
-              <select style="padding: 7px; border-radius: 5px;" onchange={handleCapacityChange}>
-                <option value="">Số Người 1, Số Phòng 1</option>
-                <option value="">Số Người 2, Số Phòng 2</option>
-              </select>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- table -->
-        <table>
-          <tr>
-            <th>Room type</th>
-            <th>Room capacity</th>
-            <th>Price</th>
-            <th>Booking</th>
-          </tr>
-          <template for:each={listRoom} for:item="room">
-            <!-- <div > -->
-            <tr key={room.Id}>
-              <td>
-                <p>{room.Room_Type__c} <a href="javascript:void(0)" onclick={handleShowModalRoomDetails}>Chi tiết</a>
-                </p>
-                <p>Chỉ còn {room.Total_Room__c} trên trang của chúng tôi</p>
-              </td>
-              <td>{room.Room_Capacity__c} người / phòng</td>
-              <td>
-                <p>{room.Price__c}</p>
-                <p>{room.discountPrice}</p>
-              </td>
-              <td style="display: flex;">
-                <lightning-combobox name="progress" value="" placeholder="Select Progress" options={options}
-                  onchange={handleChange}></lightning-combobox>
-                <lightning-button variant="brand-outline" label="Booking" onclick={handleClick}
-                  class="slds-m-left_x-small"></lightning-button>
-              </td>
-            </tr>
-            <!-- </div> -->
+        <div class="slds-col slds-size_2-of-3">
+          <h2>
+            <span style="color: cyan; font-size: 20px; padding-right: 40px">{hotelDetails.Name}</span>
+            <template for:each={hotelDetails.Star__c} for:item="star">
+              <lightning-icon key={star} icon-name="utility:favorite" size="x-small" variant="warning"
+                alternative-text="favorite" title="favorite"></lightning-icon>
+            </template>
+          </h2>
+          <p style="padding-bottom: 15px;">{hotelDetails.Address__c}</p>
+          <template for:each={hotelDetails.Convenient__c} for:item="convenient">
+            <!-- <lightning-button key={convenient} style="background-color: grey; margin-left: 0px; margin-right: 0.5 rem;"
+              label={convenient} variant="" title="Primary action" class="slds-m-left_x-small"></lightning-button> -->
+            <lightning-button style="margin-left: 0px; margin-right: 15px;" key={convenient} variant="brand"
+              label={convenient} disabled class="slds-m-left_x-small"></lightning-button>
           </template>
-        </table>
+          <p style="padding-top: 20px;">{hotelDetails.Description__c}</p>
+        </div>
       </div>
+      <div class="list-room" style="margin-top: 20px;">
+        <h2 class="font-large">List Room</h2>
+        <div class="slds-box" style="max-width: 60%; margin-bottom: 10px;">
+          <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+              <div class="slds-form-element">
+                <lightning-input placeholder="Ngày nhận phòng" type="date" name="input8" value={selectedStartDate}
+                  min={minStartDate} onchange={handleStartDateChange}></lightning-input>
+              </div>
+            </div>
+            <div class="slds-col">
+              <div class="slds-form-element">
+                <lightning-input type="date" name="input9" value={selectedEndDate} onchange={handleEndDateChange}
+                  min={selectedStartDate} placeholder="Ngày trả phòng "></lightning-input>
+              </div>
+            </div>
+            <div class="slds-col">
+              <lightning-combobox name="progress" value={selectedCapacity} placeholder="Select Progress"
+                options={capacity} onchange={handleCapacityChange}></lightning-combobox>
+            </div>
+            <div class="slds-col" style="display: flex; align-items: end;">
+              <lightning-button variant="brand-outline" label="Find room" title="" onclick={handleFindRoom}
+                class="slds-m-left_x-small"></lightning-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table style="margin-bottom: 20px;">
+        <tr style="background-color: #bfaceb;">
+          <th>Room type</th>
+          <th>Room capacity</th>
+          <th>Price</th>
+          <th>Booking</th>
+        </tr>
+        <template for:each={listRoom} for:item="room">
+          <tr key={room.Id}>
+            <td>
+              <p>{room.Room_Type__c} - <a href="javascript:void(0)" data-value={room.Id}
+                  onclick={handleShowModalRoomDetails}> Chi tiết</a>
+              </p>
+              <p style="color: red; padding-top: 10px">Chỉ còn {room.Total_Room__c} trên trang của chúng tôi</p>
+            </td>
+            <td>{room.Room_Capacity__c} người / phòng</td>
+            <td>
+              <p style="color: red; text-decoration: line-through;">{room.Price__c}</p>
+              <p>{room.discountPrice}</p>
+            </td>
+            <td>
+              <div style="display: flex;">
+                <select onchange={handleGetRoomNumber}>
+                  <option value="">Select an option&hellip;</option>
+                  <template for:each={room.roomNumber} for:item="roomNumber">
+                    <option key={roomNumber} value={roomNumber} data-value={roomNumber}>{roomNumber}</option>
+                  </template>
+                </select>
+                <div style="display: flex; align-items: end;">
+                  <lightning-button variant="brand-outline" onclick={handleModalBooking} data-value={room.Id}
+                    label="Booking" class="slds-m-left_x-small"></lightning-button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </table>
     </div>
   </div>
 
-  <!-- modal -->
+  <!-- Room details-->
   <div if:true={isModalRoomDetails}>
     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
       aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-      <div class="slds-modal__container">
-        <!-- Modal/Popup Box LWC header here -->
+      <div class="slds-modal__container" style="min-width: 70%;">
         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
           onclick={closeModal}>
           <lightning-icon icon-name="utility:close" onclick={handleCloseModalRoomDetails} alternative-text="close"
             variant="inverse" size="small"></lightning-icon>
           <span class="slds-assistive-text">Close</span>
         </button>
-        <!-- Modal/Popup Box LWC body starts here -->
         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-          <div class="slds-grid slds-gutters">
+          <div if:true={roomDetails} class="slds-grid slds-gutters">
             <div class="slds-col">
-              image
+              <lightning-carousel disable-auto-scroll>
+                <template for:each={roomDetails.Image_Room__r} for:item="img">
+                  <lightning-carousel-image key={img.Id} src={img.Image_Url__c}
+                    alternative-text="First card accessible description." href="javascript:void(0)">
+                  </lightning-carousel-image>
+                </template>
+              </lightning-carousel>
             </div>
-            <div class="slds-col">
-              Description
+            <div class="slds-col" style="min-width: 40%; background: #ebebeb; padding: 25px;">
+              <h2 class="font-large">{roomDetails.Room_Name__c}</h2>
+              <p class="font-medium"> - {roomDetails.Area__c} m2</p>
+              <template for:each={roomDetails.Convenient__c} for:item="convenient">
+                <p class="font-medium" key={convenient}> - {convenient}</p>
+              </template>
+              <h3 class="font-large">Kích thướt phòng</h3>
+              <p class="font-medium"> - {roomDetails.Area__c} m2</p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </div>
+
+  <!-- Modal booking -->
+  <div if:true={isModalBooking}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open slds-">
+      <div class="slds-modal__container" style="min-width: 50%;">
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2" style="padding: 0px;">
+          <div class="slds-box" style="background: #ebebeb; padding: 10px; margin-bottom: 30px">
+            <h2 class="font-small" style="text-align: center; color: red;">Booking information</h2>
+          </div>
+          <div style="max-width: 90%; margin: 0 auto;">
+            <div class="slds-grid slds-gutters">
+              <div if:true={roomBooking} class="slds-col slds-size_1-of-3">
+                <div style="background: #ebebeb; padding: 10px; margin-bottom: 25px; border: 3px solid">
+                  <h3 class="font-small">Hotel: {roomBooking.nameHotel}</h3>
+                  <h5>{roomBooking.address}</h5>
+                </div>
+                <div style="background: #ebebeb; padding: 10px; border: 3px solid;">
+                  <h3 class="font-small">Detail Room</h3>
+                  <h3 class="font-small" style="margin-top: 20px;">Check-in</h3>
+                  <p>{selectedStartDate}</p>
+                  <h3 class="font-small">Check-out</h3>
+                  <p>{selectedEndDate}</p>
+                  <h3 class="font-small" style="margin-top: 20px;">Stay</h3>
+                  <p>{roomBooking.stay}</p>
+                  <h3 class="font-small" style="margin-top: 20px;">Room Selected</h3>
+                  <p>{roomBooking.roomSelected} x {roomNumber}</p>
+                  <div style="display: grid; justify-content: end;">
+                    <h3 class="font-small">Total</h3>
+                    <p style="color: red; text-decoration: line-through;">VND {roomBooking.price}</p>
+                    <p>VDN {roomBooking.discountPrice}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-col slds-size_2-of-3">
+                <div class="slds-grid slds-gutters" style="margin-bottom: 10px;">
+                  <div class="slds-col">
+                    <lightning-input onchange={handleGetFirstName} type="text" label="First name"
+                      placeholder="Enter first name" required></lightning-input>
+                  </div>
+                  <div class="slds-col">
+                    <lightning-input onchange={handleGetLastName} type="text" label="Last name"
+                      placeholder="Enter last name" required></lightning-input>
+                  </div>
+                </div>
+                <lightning-input style="margin-bottom: 10px;" onchange={handleGetEmail} type="email" label="Email"
+                  placeholder="Enter email" required></lightning-input>
+                <lightning-input onchange={handleGetPhone} style="margin-bottom: 10px;" type="text" label="Phone"
+                  placeholder="Enter phone number" required></lightning-input>
+                <lightning-input style="max-width: 40%;" onchange={handleGetEstimateTime} type="time" name="input3"
+                  label="Estimated check-in time" placeholder="Select check-in time"></lightning-input>
+              </div>
+            </div>
+          </div>
+          <div class="slds-box"
+            style="background: #ebebeb; padding: 20px; margin-top: 30px; display: flex; justify-content: end">
+            <lightning-button variant="brand-outline" label="Cancle" title="Primary action with lighter look"
+              onclick={handleCloseModalBooking} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" label="Booking" style="padding-left: 10px;" title="Primary action"
+              onclick={handleBookingRoom} class="slds-m-left_x-small"></lightning-button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </div>
+
+  <!-- Modal Capacity -->
+  <div if:true={displayModalCapacity}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-3" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container" style="max-width: 26%;">
+        <!-- <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+          onclick={closeModal}>
+          <lightning-icon icon-name="utility:close" onclick={handleCloseModalCapacity} alternative-text="close"
+            variant="inverse" size="small"></lightning-icon>
+          <span class="slds-assistive-text">Close</span>
+        </button> -->
+        <div style="padding: 40px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+          <div style="display: flex; justify-content: space-between; padding-bottom: 25px;">
+            <h4 class="font-small">Adults</h4>
+            <input id="number1" onchange={handleGetAdults} type="number" style="height: 30px;" />
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <h4 class="font-small">Rooms</h4>
+            <input id="number2" onchange={handleGetRooms} type="number" style="height: 30px;" />
+          </div>
+          <button style="width: 100%; margin-top: 20px; margin-left: 0px;" onclick={handleCloseModalCapacity}
+            class="slds-button slds-button_outline-brand">Done</button>
         </div>
       </div>
     </section>

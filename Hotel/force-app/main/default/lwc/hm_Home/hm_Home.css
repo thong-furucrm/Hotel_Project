@@ -10,104 +10,55 @@ td, th {
   padding: 8px;
 }
 
-/* * {
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
+.font-large{
+  font-size: 30px;
+  font-weight: bold;
 }
 
-.bold {
-  font-size: 24px;
-  font-weight: 600;
+.font-medium{
+  font-size: 25px;
+  font-weight: 400;
 }
 
-.link {
-  color: #007bff;
-  border: 0;
+.font-small{
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.dates {
-  width: 400px;
-  border: 1px solid gray;
-  border-radius: 16px;
-  margin: 0 auto;
+.slds-carousel__content{
+  display: none;
 }
 
-.dates ul {
+input[type="checkbox"][aria-disabled="true"] {
+  background-color: blue;
+  pointer-events: none;
+}
+
+/* Pagination */
+.pagination {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 364px;
-  margin: 0 auto;
-}
-
-.dates .datePickerHolder {
-  flex-wrap: wrap;
-}
-
-li {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  min-width: 50px;
-  min-height: 50px;
-  margin: 1px;
 }
 
-.buttonContainer {
-  width: 364px;
-  margin: 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
-}
-
-.prev,
-.next {
-  border: none;
-  width: 70px;
-}
-
-.prev:hover,
-.next:hover,
-.link:hover {
-  cursor: pointer;
-}
-
-.prev:before {
-  content: '←';
-  padding-right: 4px;
-}
-
-.next:after {
-  content: '→';
-  padding-left: 4px;
-}
-
-.datePickerHolder li {
+.pagination a {
   color: black;
-  cursor: pointer;
-  border-radius: 8px;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
 }
 
-.header li {
-  background-color: white;
-  color: black;
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
 }
 
-.datePickerHolder li:hover {
-  background-color: red;
-}
+.pagination a:hover:not(.active) {background-color: #ddd;}
 
-.datePickerHolder .padder {
-  color: gray;
+.capacity-button button{
+  width: 100%; 
+  margin-top: 20px; 
+  margin-left: 0px;
 }
-
-.datePickerHolder .today {
-  background-color: orange;
-}
-
-.datePickerHolder .selected {
-  background-color: pink;
-} */
